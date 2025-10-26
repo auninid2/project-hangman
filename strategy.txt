@@ -1,6 +1,0 @@
-1. import text file
-2. see how long user input is
-3. filter words that are only the same length
-4. go through the list and sum for each letter, how many times they come up in total
-5. guess the word with the most probability
-6. if guessed letter is wrong, filter with words that dont contain that letter
