@@ -21,6 +21,9 @@ font = pygame.font.Font("assets/Gluten-light.ttf", 32)
 clock = pygame.time.Clock()
 current_frame = "main_menu"
 
+player_life = 7
+user_points = 0
+
 
 # ---------------------------------- #
 # -------- Helper functions -------- #
@@ -114,7 +117,12 @@ def draw_main_menu(buttons):
         text_rect = text.get_rect(center=btn_rect.center)
         window.blit(text, text_rect)
 
-    pygame.display.update()
+
+def draw_user_info(player_life, user_points):
+    life = font.render(str(player_life), True, (0, 0, 0))
+    points = font.render(str(user_points), True, (0, 0, 0))
+    window.blit(life, (100, 50))
+    window.blit(points, (200, 50))
 
 
 def draw_game_screen(letters):
@@ -134,17 +142,76 @@ def draw_game_screen(letters):
         text_rect = text.get_rect(center=btn_rect.center)
         window.blit(text, text_rect)
 
+
+def draw_user_input(chosen_word, letter_occurrences):
+    x_start = 100
+    y_underscore = 200
+    y_letter = 150
+    spacing = 50
+
+    for i, letter in enumerate(chosen_word):
+        if letter.isalpha():
+            underscore = font.render("_", True, (0, 0, 0))
+            window.blit(underscore, (x_start + i * spacing, y_underscore))
+
+            if (
+                letter.lower() in letter_occurrences
+                and letter_occurrences[letter.lower()]
+            ):
+                text = font.render(letter.upper(), True, (0, 0, 0))
+                window.blit(text, (x_start + i * spacing, y_letter))
+        else:
+            space = font.render(" ", True, (0, 0, 0))
+            window.blit(space, (x_start + i * spacing, y_underscore))
+
+
+def draw_end_screen(result, chosen_word):
+    window.blit(bg_image, (0, 0))
+
+    if result == "win":
+        text = font.render("You Win", True, (0, 150, 0))
+    else:
+        text = font.render(f"You Lose. Word: {chosen_word.upper()}", True, (200, 0, 0))
+
+    text_rect = text.get_rect(
+        center=(constants.WINDOW_WIDTH // 2, constants.WINDOW_HEIGHT // 2)
+    )
+    window.blit(text, text_rect)
+
+    subtext = font.render("Click anywhere to return to menu", True, (0, 0, 0))
+    sub_rect = subtext.get_rect(
+        center=(constants.WINDOW_WIDTH // 2, constants.WINDOW_HEIGHT // 2 + 80)
+    )
+    window.blit(subtext, sub_rect)
+
     pygame.display.update()
+
+
+def check_game_state(letter_occurrences, player_life):
+    """
+    Returns "win" if all letters guessed,
+    "lose" if lives are gone,
+    otherwise "playing".
+    """
+    if all(letter_occurrences.values()):
+        return "win"
+    elif player_life <= 0:
+        return "lose"
+    else:
+        return "playing"
 
 
 # ---------------------------------- #
 # ----------- Main Loop ------------ #
 # ---------------------------------- #
 def game_loop():
-    global current_frame
+    global current_frame, player_life, user_points
     letters = create_letter_buttons()
     menu_buttons = create_category_buttons()
     run = True
+    chosen_word = ""
+    letter_occurrences = {}
+    game_result = "playing"
 
     while run:
         clock.tick(constants.FPS)
@@ -161,30 +228,58 @@ def game_loop():
                         topleft=(play_buttonx, play_buttony)
                     )
                     if play_button_rect.collidepoint(pos):
+                        categories = [
+                            category["label"]
+                            for category in menu_buttons
+                            if category["pressed"]
+                        ]
+                        if not categories:
+                            continue
                         current_frame = "game"
+                        chosen_word, letter_occurrences = game_logic(categories)
+                        letters = create_letter_buttons()
+                        player_life = 7
+                        user_points = 0
+                        game_result = "playing"
 
                     for btn in menu_buttons:
                         btn_rect = category_button.get_rect(
                             topleft=(btn["x"], btn["y"])
                         )
                         if btn_rect.collidepoint(pos):
-                            if btn["pressed"]:
-                                btn["pressed"] = False
-                            else:
-                                btn["pressed"] = True
+                            btn["pressed"] = not btn["pressed"]
 
-                elif current_frame == "game":
+                elif current_frame == "game" and game_result == "playing":
                     for letter in letters:
                         btn_rect = button_image.get_rect(
                             topleft=(letter["x"], letter["y"])
                         )
                         if btn_rect.collidepoint(pos) and not letter["pressed"]:
                             letter["pressed"] = True
+                            guessed_letter = letter["letter"].lower()
+
+                            if guessed_letter in letter_occurrences:
+                                letter_occurrences[guessed_letter] = True
+                                user_points += 10
+                            else:
+                                player_life -= 1
+
+                    game_result = check_game_state(letter_occurrences, player_life)
+
+                elif current_frame == "game" and game_result in ("win", "lose"):
+                    current_frame = "main_menu"
 
         if current_frame == "main_menu":
             draw_main_menu(menu_buttons)
         elif current_frame == "game":
-            draw_game_screen(letters)
+            if game_result == "playing":
+                draw_game_screen(letters)
+                draw_user_input(chosen_word, letter_occurrences)
+                draw_user_info(player_life, user_points)
+            else:
+                draw_end_screen(game_result, chosen_word)
+
+        pygame.display.update()
 
     pygame.quit()
 

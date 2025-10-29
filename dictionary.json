@@ -1,5 +1,5 @@
 {
-  "animals": [
+  "Animals": [
     { "3": "cat" },
     { "3": "dog" },
     { "4": "lion" },
@@ -21,7 +21,7 @@
     { "5": "snake" },
     { "4": "fish" }
   ],
-  "jobs": [
+  "Jobs": [
     { "7": "teacher" },
     { "6": "doctor" },
     { "8": "engineer" },
@@ -43,7 +43,7 @@
     { "6": "baker" },
     { "9": "accountant" }
   ],
-  "sports": [
+  "Sports": [
     { "6": "soccer" },
     { "10": "basketball" },
     { "6": "tennis" },
@@ -65,7 +65,7 @@
     { "8": "badminton" },
     { "7": "climbing" }
   ],
-  "countries": [
+  "Cities": [
     { "5": "China" },
     { "5": "India" },
     { "5": "Japan" },
@@ -109,7 +109,7 @@
     { "6": "Nestle" },
     { "5": "Honda" }
   ],
-  "food": [
+  "Food": [
     { "5": "pizza" },
     { "6": "burger" },
     { "5": "pasta" },
