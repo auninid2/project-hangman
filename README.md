@@ -13,7 +13,7 @@ Instead, a sakura flower loses its petals one by one as you make incorrect guess
 - You get 6 attempts before the sakura flower is completely bare.  
 
 ### Demo
-[![Watch the video](https://raw.githubusercontent.com/auninid2/project-hangman/main/demo/thumbnail.jpg)](https://raw.githubusercontent.com/auninid2/project-hangman/main/demo/demo.mp4)
+[![Video Title](https://img.youtube.com/vi/VIDEO_ID/0.jpg)](https://youtu.be/KHl7L5Ul6uo)
 
 ## Hangman Solver (`hangman_solver.ipynb`)
 
