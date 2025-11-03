@@ -12,6 +12,9 @@ Instead, a sakura flower loses its petals one by one as you make incorrect guess
 - Choose between 6 different categories of words.  
 - You get 6 attempts before the sakura flower is completely bare.  
 
+### Demo
+[![Watch the video](https://raw.githubusercontent.com/auninid2/project-hangman/main/demo/thumbnail.jpg)](https://raw.githubusercontent.com/auninid2/project-hangman/main/demo/demo.mp4)
+
 ## Hangman Solver (`hangman_solver.ipynb`)
 
 A fully automated word-guessing algorithm that can:
